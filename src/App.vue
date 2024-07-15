@@ -1,26 +1,96 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <main class="container">
+    <section>
+      <img src="../public/Pokemon-Logo.jpg" alt="logo-texto-pokemon" />
+      <h1>¿Quién es ese Pokémon?</h1>
+      <p><strong>Pokémones descubiertos: {{ pokemonCount }}</strong></p>
+    </section>
+    <section class="list-pokemon">
+      <PokemonCard v-for="pokemon in pokemons" :key="pokemon.name" :pokemon="pokemon"
+        @pokemon-descubierto="pokemonDescubierto" />
+    </section>
+  </main>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from "axios";
+import PokemonCard from "./components/PokemonCard.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+
   components: {
-    HelloWorld
-  }
-}
+    PokemonCard,
+  },
+
+  data() {
+    return {
+      pokemons: [], // Aquí almacenaremos los detalles de los Pokémon
+    };
+  },
+
+  computed: {
+    pokemonCount() {
+      return this.pokemons.filter(pokemon => pokemon.pokemonDescubiertoEstado).length;
+    }
+  },
+
+  created() {
+    this.fetchPokemons(); // Llamamos a fetchPokemons cuando el componente es creado
+  },
+
+  methods: {
+    async fetchPokemons() {
+      try {
+        const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=20");
+        const results = response.data.results;
+
+        const promises = results.map(async (pokemon) => {
+          const response = await axios.get(pokemon.url);
+          return response.data;
+        });
+
+        const pokemonDetails = await Promise.all(promises);
+        // Agregamos la propiedad pokemonDescubiertoEstado a cada pokemon
+        pokemonDetails.forEach(pokemon => {
+          pokemon.pokemonDescubiertoEstado = false;
+        });
+        this.pokemons = pokemonDetails;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+
+    pokemonDescubierto(pokemonName) {
+      const pokemon = this.pokemons.find(pokemon => pokemon.name === pokemonName);
+      if (pokemon) {
+        pokemon.pokemonDescubiertoEstado = true;
+        this.$forceUpdate(); // Forzar la actualización para que se refleje el cambio en la propiedad computada
+        alert(`¡Has descubierto a ${pokemon.name}!`);
+      } else {
+        alert("¡Pokémon incorrecto!");
+      }
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+<style scoped>
+.container {
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20px;
+}
+
+.list-pokemon {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+img{
+  width: 20rem;
+  height: 10rem;
+  object-fit: contain;
 }
 </style>
