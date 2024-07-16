@@ -25,7 +25,7 @@ export default {
 
   data() {
     return {
-      pokemons: [], // Aquí almacenaremos los detalles de los Pokémon
+      pokemons: [],
     };
   },
 
@@ -36,7 +36,7 @@ export default {
   },
 
   created() {
-    this.fetchPokemons(); // Llamamos a fetchPokemons cuando el componente es creado
+    this.fetchPokemons();
   },
 
   methods: {
@@ -51,7 +51,7 @@ export default {
         });
 
         const pokemonDetails = await Promise.all(promises);
-        // Agregamos la propiedad pokemonDescubiertoEstado a cada pokemon
+        
         pokemonDetails.forEach(pokemon => {
           pokemon.pokemonDescubiertoEstado = false;
         });
@@ -65,7 +65,7 @@ export default {
       const pokemon = this.pokemons.find(pokemon => pokemon.name === pokemonName);
       if (pokemon) {
         pokemon.pokemonDescubiertoEstado = true;
-        this.$forceUpdate(); // Forzar la actualización para que se refleje el cambio en la propiedad computada
+        this.$forceUpdate(); 
         alert(`¡Has descubierto a ${pokemon.name}!`);
       } else {
         alert("¡Pokémon incorrecto!");

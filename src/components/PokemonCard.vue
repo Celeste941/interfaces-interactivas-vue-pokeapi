@@ -57,8 +57,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  /* Hover effect */
+  
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -68,11 +67,6 @@ export default {
 img {
   width: 10rem;
   height: 10rem;
-  /* border-radius: 50%; */
-  /* object-fit: cover; */
-  /* Ajusta la imagen al tamaño del contenedor */
-  /* border: 2px solid #fff; */
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 h1{
@@ -83,8 +77,7 @@ form {
   margin-top: 10px;
 }
 
-/* Estilo para el input */
-input[type="text"] {
+input{
   padding: 8px;
   margin-bottom: 8px;
   border: 1px solid #ccc;
